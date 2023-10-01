@@ -12,10 +12,13 @@ type CartSliderProps = {
   product: Product[];
   isSidebarOpen: boolean;
   setIsSidebarOpen: (e: boolean) => void;
+  setIsWLSidebarOpen: (e: boolean) => void;
   handleSidebarToggle: () => void;
+  wList: Product[];
+  setWList: (e: Product[]) => void
 };
 
-const CartSlider: React.FC<CartSliderProps> = ({ product, isSidebarOpen, setIsSidebarOpen, handleSidebarToggle }) => {
+const CartSlider: React.FC<CartSliderProps> = ({ product, isSidebarOpen, setIsSidebarOpen, handleSidebarToggle, wList, setWList,setIsWLSidebarOpen }) => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [cart, setCart] = useState([{
@@ -37,8 +40,13 @@ const CartSlider: React.FC<CartSliderProps> = ({ product, isSidebarOpen, setIsSi
     }, 1000);
     setCart([...cart, data])
   };
+  const handleWL = (data: Product) => {
 
-
+    setTimeout(() => {
+      setIsWLSidebarOpen(true); // Open the sidebar after adding to wish list
+    }, 1000);
+    setWList([...wList, data])
+  };
 
   return (
     <div className="flex">
@@ -60,12 +68,20 @@ const CartSlider: React.FC<CartSliderProps> = ({ product, isSidebarOpen, setIsSi
             />
           </div>
           <button
-            className={`px-4 py-2 rounded ${ 'bg-blue-500 hover:bg-blue-600'
+            className={`px-4 py-2 rounded ${'bg-blue-500 hover:bg-blue-600'
               } text-white transition-colors duration-300`}
             // disabled={isAdding}
             onClick={() => handleAddToCart(data)}
           >
-            { 'Add to Cart'}
+            {'Add to Cart'}
+          </button>
+          <button
+            className={`px-4 py-2 rounded ${'bg-black hover:bg-gray-700'
+              } text-white transition-colors duration-300`}
+            // disabled={isAdding}
+            onClick={() => handleWL(data)}
+          >
+            Add to Wish List
           </button>
         </div>
       ))}
@@ -87,7 +103,7 @@ const CartSlider: React.FC<CartSliderProps> = ({ product, isSidebarOpen, setIsSi
         }
         {isSidebarOpen && (
           <div className={` ${cart.length && " max-h-[35%] overflow-y-auto"} `}>
-            {cart.map((item,i) => (
+            {cart.map((item, i) => (
               <div key={i}>
                 <CartSliderItem name={item.name} price={item.price} />
               </div>
